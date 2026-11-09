@@ -22,4 +22,4 @@ jobs:
       with:
         name: FlashFixer-EXE
         path: bin/Release/net8.0/win-x64/publish/
- 
+
