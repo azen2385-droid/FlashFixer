@@ -21,5 +21,5 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: FlashFixer-EXE
-        path: bin/Release/net8.0t/win-x64/publish/
+        path: bin/Release/net8.0/win-x64/publish/
  
