@@ -9,10 +9,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # لا حاجة لخطوة Setup .NET، لأن msbuild مثبت مسبقاً على windows-latest
-      # الخطوة التالية اختيارية للتأكد من وجود الأدوات
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
+
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v2
 
       - name: Restore NuGet Packages
         run: nuget restore FlashFixer.csproj
@@ -24,5 +25,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: FlashFixer-EXE
-          # المسار يعتمد على هيكل مشروعك. عادةً ما يكون مشابهاً لهذا:
-          path: bin\Release\net48\FlashFixer.exe
+          # السطر ده هو السر: بيدور على أي فولدر اسمه Release وياخد اللي جواه
+          path: "**/bin/Release/**"
