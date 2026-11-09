@@ -9,21 +9,27 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v2
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
 
-      - name: Setup NuGet
-        uses: NuGet/setup-nuget@v2
-
-      - name: Restore NuGet Packages
-        run: nuget restore FlashFixer.csproj
-
+      # 1. بناء المشروع باستخدام dotnet build المخصص لمشاريع SDK-style
       - name: Build Solution
-        run: msbuild FlashFixer.csproj /p:Configuration=Release /p:Platform="Any CPU"
+        run: dotnet build FlashFixer.csproj -c Release
 
+      # 2. خطوة تشخيصية: عرض كل الملفات اللي تم بناؤها
+      - name: List Build Output
+        run: |
+          Write-Host "--- محتويات مجلد bin ---"
+          dir bin -Recurse -ErrorAction SilentlyContinue
+          Write-Host "--- محتويات مجلد obj ---"
+          dir obj -Recurse -ErrorAction SilentlyContinue
+
+      # 3. رفع الملفات من المسار الافتراضي لمشاريع net48
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: FlashFixer-EXE
-          # السطر ده هو السر: بيدور على أي فولدر اسمه Release وياخد اللي جواه
-          path: "**/bin/Release/**"
+          path: bin/Release/net48/
+          if-no-files-found: error
